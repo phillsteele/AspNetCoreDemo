@@ -16,6 +16,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 
+// Info on middleware: https://docs.microsoft.com/en-gb/aspnet/core/fundamentals/middleware/index?view=aspnetcore-2.2
+
 namespace AspNetCoreDemo
 {
     public class Startup
@@ -38,7 +40,7 @@ namespace AspNetCoreDemo
         {
             // This approach does not require a separate controller to handle error responses and is more suited to APIs
             app.UseExceptionHandler(errorApp =>
-                errorApp.Run(async context => await UnexpectedExceptionHandler.HandleUnexpectedException(context))
+                errorApp.Run(async context => await UnexpectedExceptionHandler.Invoke(context))
             );
 
             //if (env.IsDevelopment())

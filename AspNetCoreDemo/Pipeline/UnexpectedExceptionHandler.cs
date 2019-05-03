@@ -8,7 +8,7 @@ namespace AspNetCoreDemo.Pipeline
 {
     public static class UnexpectedExceptionHandler
     {
-        public static async Task HandleUnexpectedException(HttpContext context)
+        public static async Task Invoke(HttpContext context)
         {
             context.Response.ContentType = "application/json";
 
@@ -45,7 +45,7 @@ namespace AspNetCoreDemo.Pipeline
         {
             var errorResponse = ((SlcsValidationException)exceptionHandlerPathFeature?.Error).SlcsErrors;
 
-            context.Response.StatusCode = 500;
+            context.Response.StatusCode = 422;
 
             await context.Response.WriteAsync(errorResponse?.ToJson());
         }
