@@ -1,14 +1,13 @@
 ﻿using AspNetCoreDemo.Exceptions;
-using AspNetCoreDemo.Models.SlcsOutbound;
+using AspNetCoreDemo.Model.SlcsOutbound;
 using AspNetCoreDemo.Pipeline;
+using AspNetCoreDemo.Tests.TestHelpers;
 using Microsoft.AspNetCore.Http;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Diagnostics;
-using System.IO;
 using Newtonsoft.Json;
-using AspNetCoreDemo.Tests.TestHelpers;
+using System;
+using System.IO;
+using System.Threading.Tasks;
 
 namespace AspNetCoreDemo.Tests.Pipeline
 {
@@ -21,6 +20,8 @@ namespace AspNetCoreDemo.Tests.Pipeline
         public async Task UnhandledExceptionsReturnA500()
         {
             var context = new DefaultHttpContext();
+
+            context.AddExceptionToContext(new ApplicationException("an exception"));
 
             await UnexpectedExceptionHandler.Invoke(context);
 
@@ -35,10 +36,7 @@ namespace AspNetCoreDemo.Tests.Pipeline
             var validationException = new SlcsValidationException(ValidationExceptionSeverity.Error, "a message",
                 SlcsErrors.WrapError(new SlcsError { code = "123" }));
 
-            // We need to add a feature of type IExceptionHandlerPathFeature to associate the exception with the http context
-            var exeptionHandlerPathFeature = new ExceptionHandlerFeature();
-            exeptionHandlerPathFeature.Error = validationException;
-            context.Features.Set<IExceptionHandlerPathFeature>(exeptionHandlerPathFeature);
+            context.AddExceptionToContext(validationException);
 
             await UnexpectedExceptionHandler.Invoke(context);
 

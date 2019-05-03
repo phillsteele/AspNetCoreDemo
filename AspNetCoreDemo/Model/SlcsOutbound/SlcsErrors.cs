@@ -2,7 +2,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace AspNetCoreDemo.Models.SlcsOutbound
+namespace AspNetCoreDemo.Model.SlcsOutbound
 {
     public class SlcsErrors : Message
     {

@@ -1,8 +1,8 @@
-﻿using AspNetCoreDemo.Models.SlcsOutbound;
+﻿using AspNetCoreDemo.Model.SlcsOutbound;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 
-namespace AspNetCoreDemo.Tests.Models.SlcsOutbound
+namespace AspNetCoreDemo.Tests.Model.SlcsOutbound
 {
     [TestClass]
     public class SlcsErrorsTests

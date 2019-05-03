@@ -1,6 +1,6 @@
 ﻿using System;
 
-using SO = AspNetCoreDemo.Models.SlcsOutbound;
+using SO = AspNetCoreDemo.Model.SlcsOutbound;
 
 namespace AspNetCoreDemo.Exceptions
 {

@@ -1,20 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using AspNetCoreDemo.Exceptions;
-using AspNetCoreDemo.Models.SlcsOutbound;
-using AspNetCoreDemo.Pipeline;
+﻿using AspNetCoreDemo.Pipeline;
 using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
+using System;
+using System.Threading.Tasks;
 
 // Info on middleware: https://docs.microsoft.com/en-gb/aspnet/core/fundamentals/middleware/index?view=aspnetcore-2.2
 

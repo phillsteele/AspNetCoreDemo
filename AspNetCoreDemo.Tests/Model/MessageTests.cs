@@ -1,7 +1,7 @@
-﻿using AspNetCoreDemo.Models;
+﻿using AspNetCoreDemo.Model;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace AspNetCoreDemo.Tests.Models
+namespace AspNetCoreDemo.Tests.Model
 {
     [TestClass]
     public class MessageTests

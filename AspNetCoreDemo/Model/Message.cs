@@ -1,6 +1,6 @@
 ﻿using Newtonsoft.Json;
 
-namespace AspNetCoreDemo.Models
+namespace AspNetCoreDemo.Model
 {
     public class Message
     {

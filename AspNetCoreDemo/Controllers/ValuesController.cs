@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AspNetCoreDemo.Exceptions;
-using AspNetCoreDemo.Models.SlcsOutbound;
+using AspNetCoreDemo.Model.SlcsOutbound;
 using Microsoft.AspNetCore.Mvc;
 
 namespace AspNetCoreDemo.Controllers
