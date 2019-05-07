@@ -24,12 +24,32 @@ namespace AspNetCoreDemo.Controllers
     //  }
 
     // If model binding fails for any reason subscription will be null, for example attempting to assign a non-guid to a guid
+    //
+    //
+    // We can check the ModelState.IsValid and return an automatic response based on the ModelState as shown.
+
+    //if (!ModelState.IsValid)
+    //{
+    //    return this.BadRequest(ModelState);
+    //}
+
+    // This produces an error that looks like:
+    // 400 status code
+    //{
+    //    "subscriptionGroupId": [
+    //        "Error converting value \"e68e181c-0317-4547-a529-bfe2f22096d\" to type 'System.Nullable`1[System.Guid]'. Path 'subscriptionGroupId', line 2, position 62."
+    //    ]
+    //}
 
     [Route("api/[controller]")]
-    public class SubscriptionsController : ControllerBase
+    public class SubscriptionsController : Controller
     {
         public async Task<IActionResult> Fulfil([FromBody] Subscription subscription)
         {
+            if (!ModelState.IsValid)
+            {
+                return this.BadRequest(ModelState);
+            }
 
             return Ok();
         }

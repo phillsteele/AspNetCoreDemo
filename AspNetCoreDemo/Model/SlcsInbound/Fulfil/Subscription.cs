@@ -1,25 +1,20 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using AspNetCoreDemo.Validators;
+using System;
 using System.ComponentModel.DataAnnotations;
 
 namespace AspNetCoreDemo.Model.SlcsInbound.Fulfil
 {
     public class Subscription : Message
     {
-        /// <summary>
-        /// If this is not specified then we need to create it.
-        /// Optional field.
-        /// </summary>
-        //[Guid]
+        // Model binding will fail if this is not a guid - we see a null object passed to the controller in this case
         public Guid? subscriptionGroupId { get; set; }
 
-        /// <summary>
-        /// The client reference is meaningful only to the client.
-        /// Optional field.
-        /// </summary>
-        [MaxLength(100)]
+        // Model binding should occur but model validation will fail if this is not a guid
+        [Guid]
+        public string subscriptionId { get; set; }
+
+        // Model binding should occur but model validation will fail if this is the wrong length
+        [MaxLength(10)]
         public string clientRef { get; set; }
     }
 }

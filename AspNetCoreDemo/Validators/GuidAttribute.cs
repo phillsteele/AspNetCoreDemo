@@ -14,7 +14,8 @@ namespace AspNetCoreDemo.Validators
                 return ValidationResult.Success;
             Guid guid;
             if (Guid.TryParse(value.ToString(), out guid) == false)
-                return new ValidationResult($"The value '{value.ToString()}' is invalid, it must be a Guid");
+                //return new ValidationResult($"The value '{value.ToString()}' is invalid, it must be a Guid");
+                return new ValidationResult($"The value '{value.ToString()}' is invalid, it must be a Guid", new string[] { "a", "b", "c" });
 
             return ValidationResult.Success;
 
