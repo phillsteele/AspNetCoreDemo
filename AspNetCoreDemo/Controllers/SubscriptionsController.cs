@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AspNetCoreDemo.Model.SlcsInbound.Fulfil;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -28,10 +29,19 @@ namespace AspNetCoreDemo.Controllers
     [Route("api/[controller]")]
     public class SubscriptionsController : ControllerBase
     {
+        [HttpPost]
         public async Task<IActionResult> Fulfil([FromBody] Subscription subscription)
         {
 
             return Ok();
+        }
+
+        [HttpGet]
+        [Authorize]
+        public async Task<IActionResult> Fulfil(Guid? subscriptionId)
+        {
+
+            return Ok(new { name = "123" });
         }
     }
 }

@@ -1,4 +1,6 @@
 ﻿using AspNetCoreDemo.Pipeline;
+using AspNetCoreDemo.Security;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -25,6 +27,12 @@ namespace AspNetCoreDemo
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
+
+            services.AddAuthentication("BasicAuthentication")
+                .AddScheme<AuthenticationSchemeOptions, BasicAuthenticationHandler>("BasicAuthentication", null);
+
+            // Configure DI for the services
+            services.AddScoped<IUserService, SimpleUserService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -51,6 +59,7 @@ namespace AspNetCoreDemo
             //}
 
             app
+               .UseAuthentication()
                .UseHttpsRedirection()
                .UseMvc();
         }
