@@ -43,9 +43,11 @@ namespace AspNetCoreDemo.Controllers
     //}
 
     [Route("api/[controller]")]
+    [Authorize]
     public class SubscriptionsController : Controller
     {
         [HttpPost]
+        [AllowAnonymous]
         public async Task<IActionResult> Fulfil([FromBody] Subscription subscription)
         {
             if (!ModelState.IsValid)
@@ -57,7 +59,6 @@ namespace AspNetCoreDemo.Controllers
         }
 
         [HttpGet]
-        [Authorize]
         public async Task<IActionResult> Fulfil(Guid? subscriptionId)
         {
 
