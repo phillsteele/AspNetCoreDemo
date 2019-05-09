@@ -65,7 +65,12 @@ namespace AspNetCoreDemo.Tests.Security
             var httpRequest = httpContext.Request;
             var scheme = new AuthenticationScheme("BasicAuthorisation", "BasicAuthorisation", typeof(BasicAuthenticationHandler));
             var userService = new Mock<IUserService>();
-            userService.Setup(t => t.Authenticate(It.IsAny<string>(), It.IsAny<string>())).Returns(async () => new User("abc"));
+            userService.Setup(t => t.Authenticate(It.IsAny<string>(), It.IsAny<string>())).Returns(async () =>
+            {
+                var user = new User("abc");
+                await user.AuthenticateUser("123");
+                return user;
+            });
 
             // Add authorization header - username = abc  password = xyz
             httpRequest.Headers.Add("Authorization", "Basic YWJjOnh5eg==");
