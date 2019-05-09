@@ -2,7 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using AspNetCoreDemo.Authorization;
 using AspNetCoreDemo.Model.SlcsInbound.Fulfil;
+using AspNetCoreDemo.Security;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -47,7 +49,7 @@ namespace AspNetCoreDemo.Controllers
     public class SubscriptionsController : Controller
     {
         [HttpPost]
-        [AllowAnonymous]
+        //[AllowAnonymous] -- This attribute allows us to poke a hole in the Authorization mechanism.  Useful if we need a publicly available endpoint.
         public async Task<IActionResult> Fulfil([FromBody] Subscription subscription)
         {
             if (!ModelState.IsValid)
@@ -59,6 +61,7 @@ namespace AspNetCoreDemo.Controllers
         }
 
         [HttpGet]
+        [HasClaimAuthorize(CustomClaimTypes.CanFulfilGet)]
         public async Task<IActionResult> Fulfil(Guid? subscriptionId)
         {
 

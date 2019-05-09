@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using System;
+using System.Linq;
 using System.Net.Http.Headers;
 using System.Security.Claims;
 using System.Text;
@@ -43,7 +44,7 @@ namespace AspNetCoreDemo.Security
                 return AuthenticateResult.Fail("Missing Authorization Header");
 
             string userName = "";
-            bool authenticated = false;
+            IUser user = null;
 
             try
             {
@@ -52,23 +53,29 @@ namespace AspNetCoreDemo.Security
                 var credentials = Encoding.UTF8.GetString(credentialBytes).Split(':');
                 userName = credentials[0];
                 var password = credentials[1];
-                authenticated = await userService.Authenticate(userName, password);
+                user = await userService.Authenticate(userName, password);
             }
             catch
             {
                 return AuthenticateResult.Fail("Invalid Authorization Header");
             }
 
-            if (!authenticated)
-                return AuthenticateResult.Fail("Invalid Username or Password");
+            if (user == null || !user.IsAuthenticated)
+                return AuthenticateResult.Fail("Invalid Username or password");
 
-            var claims = new[] { new Claim(ClaimTypes.Name, userName) };
-
-            var identity = new ClaimsIdentity(claims, scheme.Name);
-            var principal = new ClaimsPrincipal(identity);
+            var identity = new ClaimsIdentity(GetClaims(user), scheme.Name);
+            var principal = new ClaimsPrincipal(identity);            
             var ticket = new AuthenticationTicket(principal, scheme.Name);
 
             return AuthenticateResult.Success(ticket);
+        }
+
+        private static Claim[] GetClaims(IUser user)
+        {
+            var claims = from claim in user.Claims
+                         select new Claim(claim.Key, claim.Value);
+
+            return claims.ToArray();
         }
     }
 }

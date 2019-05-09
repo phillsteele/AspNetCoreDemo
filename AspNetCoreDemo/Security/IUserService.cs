@@ -4,6 +4,6 @@ namespace AspNetCoreDemo.Security
 {
     public interface IUserService
     {
-        Task<bool> Authenticate(string userName, string password);
+        Task<IUser> Authenticate(string userName, string password);
     }
 }

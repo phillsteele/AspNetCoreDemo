@@ -1,6 +1,8 @@
 ﻿using AspNetCoreDemo.Pipeline;
 using AspNetCoreDemo.Security;
+using AspNetCoreDemo.Users;
 using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -31,8 +33,17 @@ namespace AspNetCoreDemo
             services.AddAuthentication("BasicAuthentication")
                 .AddScheme<AuthenticationSchemeOptions, BasicAuthenticationHandler>("BasicAuthentication", null);
 
+            services.AddAuthorization(options =>
+            {
+                options.AddPolicy(
+                    Policies.HasClaim,
+                    policyBuilder => policyBuilder.AddRequirements(new HasClaimRequirement()));
+            });
+
             // Configure DI for the services
-            services.AddScoped<IUserService, SimpleUserService>();
+            services.AddSingleton<IAuthorizationHandler, HasClaimHandler>();
+            services.AddSingleton<IUserList, CustomUserList>();
+            services.AddSingleton<IUserService, SimpleUserService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

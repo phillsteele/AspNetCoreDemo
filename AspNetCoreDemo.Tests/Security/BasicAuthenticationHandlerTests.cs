@@ -65,7 +65,7 @@ namespace AspNetCoreDemo.Tests.Security
             var httpRequest = httpContext.Request;
             var scheme = new AuthenticationScheme("BasicAuthorisation", "BasicAuthorisation", typeof(BasicAuthenticationHandler));
             var userService = new Mock<IUserService>();
-            userService.Setup(t => t.Authenticate(It.IsAny<string>(), It.IsAny<string>())).Returns(async () => true);
+            userService.Setup(t => t.Authenticate(It.IsAny<string>(), It.IsAny<string>())).Returns(async () => new User("abc"));
 
             // Add authorization header - username = abc  password = xyz
             httpRequest.Headers.Add("Authorization", "Basic YWJjOnh5eg==");
@@ -83,7 +83,7 @@ namespace AspNetCoreDemo.Tests.Security
             var httpRequest = httpContext.Request;
             var scheme = new AuthenticationScheme("BasicAuthorisation", "BasicAuthorisation", typeof(BasicAuthenticationHandler));
             var userService = new Mock<IUserService>();
-            userService.Setup(t => t.Authenticate(It.IsAny<string>(), It.IsAny<string>())).Returns(async () => true);
+            userService.Setup(t => t.Authenticate(It.IsAny<string>(), It.IsAny<string>())).Returns(async () => new User("abc"));
 
             // Add authorization header - username = abc  password = xyz
             httpRequest.Headers.Add("Authorization", "Basic YWJjOnh5eg==");
