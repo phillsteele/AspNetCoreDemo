@@ -7,9 +7,7 @@ namespace AspNetCoreDemo.Users
     {
         public const string LsmUsername = "lsm";
 
-        public LsmUser() : base (LsmUsername)
-        {
-        }
+        public LsmUser() : base (LsmUsername) {}
 
         protected override void AssignClaims()
         {
@@ -18,6 +16,8 @@ namespace AspNetCoreDemo.Users
             //Claims.Add(CustomClaimTypes.CanFulfilGet, "");
 
             Claims.Add(CustomClaimTypes.FulfilGet, "");
+
+            // Enchancement - we can define claim sets of commonly grouped claims
         }
     }
 }

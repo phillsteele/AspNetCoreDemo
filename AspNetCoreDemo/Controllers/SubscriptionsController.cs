@@ -47,6 +47,11 @@ namespace AspNetCoreDemo.Controllers
     
     public class SubscriptionsController : Controller
     {
+        /// <summary>
+        /// Create a subscription
+        /// </summary>
+        /// <param name="subscription"></param>
+        /// <returns></returns>
         [HttpPost]
         [Authorize]
         [Route("api/[controller]")]
@@ -69,6 +74,11 @@ namespace AspNetCoreDemo.Controllers
         //[Authorize(Policies.HasClaim)]
         // Policies can be handled by a custom handler, i.e. HasClaimPolicyHandler
 
+        /// <summary>
+        /// Fetch an existing subscription
+        /// </summary>
+        /// <param name="subscriptionId"></param>
+        /// <returns></returns>
         [HttpGet]
         [HasClaimAuthorize(CustomClaimTypes.FulfilGet)]
         [Route("api/[controller]/{subscriptionId}")]
@@ -78,6 +88,11 @@ namespace AspNetCoreDemo.Controllers
             return Ok(new { name = "123" });
         }
 
+        /// <summary>
+        /// Delete a subscription
+        /// </summary>
+        /// <param name="subscriptionId"></param>
+        /// <returns></returns>
         [HttpDelete]
         [HasClaimAuthorize]
         [Route("api/[controller]/{subscriptionId}")]

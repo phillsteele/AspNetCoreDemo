@@ -1,5 +1,4 @@
-﻿using AspNetCoreDemo.Authorization;
-using AspNetCoreDemo.Pipeline;
+﻿using AspNetCoreDemo.Pipeline;
 using AspNetCoreDemo.Security;
 using AspNetCoreDemo.Users;
 using Microsoft.AspNetCore.Authentication;
@@ -10,8 +9,10 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Swashbuckle.AspNetCore.Swagger;
 using System;
 using System.Threading.Tasks;
+using AspNetCoreDemo.Setup;
 
 // Info on middleware: https://docs.microsoft.com/en-gb/aspnet/core/fundamentals/middleware/index?view=aspnetcore-2.2
 
@@ -41,6 +42,9 @@ namespace AspNetCoreDemo
             //        policy => policy.Requirements.Add(new HasClaimRequirement(CustomClaimTypes.FulfilGet)));
             //});
 
+            // Register the Swagger generator, defining 1 or more Swagger documents
+            services.AddSwaggerGen(Swagger.Configure);
+
             // Configure DI for the services
             services.AddSingleton<IAuthorizationHandler, HasClaimHandler>();
             services.AddSingleton<IAuthorizationPolicyProvider, HasClaimPolicyProvider>();
@@ -51,11 +55,6 @@ namespace AspNetCoreDemo
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
-            // This approach does not require a separate controller to handle error responses and is more suited to APIs
-            app.UseExceptionHandler(errorApp =>
-                errorApp.Run(async context => await UnexpectedExceptionHandler.Invoke(context))
-            );
-
             //if (env.IsDevelopment())
             //{
             //    // Don't use this in production.  It gives a very pretty stack trace and shows in the code where the exception occurred.
@@ -72,9 +71,20 @@ namespace AspNetCoreDemo
             //}
 
             app
-               .UseAuthentication()
-               .UseHttpsRedirection()
-               .UseMvc();
+                // This approach does not require a separate controller to handle error responses and is more suited to APIs
+                .UseExceptionHandler(errorApp => errorApp.Run(async context => await UnexpectedExceptionHandler.Invoke(context)))
+
+                // Ensure we use Basic Authentication
+                .UseAuthentication()
+
+                .UseHttpsRedirection()
+
+                // Plug in the MVC framework
+                .UseMvc()
+
+                // Add Swagger
+                .UseSwagger()
+                .UseSwaggerUI(options => options.SwaggerEndpoint("/swagger/v1/swagger.json", "SLCS v2"));
         }
 
         private Task async(HttpContext context)
