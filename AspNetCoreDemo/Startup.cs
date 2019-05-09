@@ -1,4 +1,5 @@
-﻿using AspNetCoreDemo.Pipeline;
+﻿using AspNetCoreDemo.Authorization;
+using AspNetCoreDemo.Pipeline;
 using AspNetCoreDemo.Security;
 using AspNetCoreDemo.Users;
 using Microsoft.AspNetCore.Authentication;
@@ -33,15 +34,16 @@ namespace AspNetCoreDemo
             services.AddAuthentication("BasicAuthentication")
                 .AddScheme<AuthenticationSchemeOptions, BasicAuthenticationHandler>("BasicAuthentication", null);
 
-            services.AddAuthorization(options =>
-            {
-                options.AddPolicy(
-                    Policies.HasClaim,
-                    policyBuilder => policyBuilder.AddRequirements(new HasClaimRequirement()));
-            });
+            //services.AddAuthorization(options =>
+            //{
+            //    options.AddPolicy(
+            //        Policies.HasClaim,
+            //        policy => policy.Requirements.Add(new HasClaimRequirement(CustomClaimTypes.FulfilGet)));
+            //});
 
             // Configure DI for the services
             services.AddSingleton<IAuthorizationHandler, HasClaimHandler>();
+            services.AddSingleton<IAuthorizationPolicyProvider, HasClaimPolicyProvider>();
             services.AddSingleton<IUserList, CustomUserList>();
             services.AddSingleton<IUserService, SimpleUserService>();
         }

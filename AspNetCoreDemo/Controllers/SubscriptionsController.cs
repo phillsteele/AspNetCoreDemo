@@ -44,13 +44,14 @@ namespace AspNetCoreDemo.Controllers
     //    ]
     //}
 
-    [Route("api/[controller]")]
-    [Authorize]
+    
     public class SubscriptionsController : Controller
     {
         [HttpPost]
+        [Authorize]
+        [Route("api/[controller]")]
         //[AllowAnonymous] -- This attribute allows us to poke a hole in the Authorization mechanism.  Useful if we need a publicly available endpoint.
-        public async Task<IActionResult> Fulfil([FromBody] Subscription subscription)
+        public async Task<IActionResult> Post([FromBody] Subscription subscription)
         {
             if (!ModelState.IsValid)
             {
@@ -60,12 +61,30 @@ namespace AspNetCoreDemo.Controllers
             return Ok();
         }
 
-        [HttpGet]
-        [HasClaimAuthorize(CustomClaimTypes.CanFulfilGet)]
-        public async Task<IActionResult> Fulfil(Guid? subscriptionId)
-        {
 
+        //[Authorize("bob")]
+        // If there is no policy called "bob" defined then calling this method will result in an exception: "The AuthorizationPolicy named: 'bob' was not found."
+        // If the policy fails then the user is returned a 403 - Forbidden
+
+        //[Authorize(Policies.HasClaim)]
+        // Policies can be handled by a custom handler, i.e. HasClaimPolicyHandler
+
+        [HttpGet]
+        [HasClaimAuthorize(CustomClaimTypes.FulfilGet)]
+        [Route("api/[controller]/{subscriptionId}")]
+        // This will insist that the caller has the claim "Fulfil.Get"
+        public async Task<IActionResult> Get([FromRoute] Guid? subscriptionId)
+        {
             return Ok(new { name = "123" });
+        }
+
+        [HttpDelete]
+        [HasClaimAuthorize]
+        [Route("api/[controller]/{subscriptionId}")]
+        // As no claim has been specified the default behaviour will apply which means that the user must be authenticated
+        public async Task<IActionResult> Delete([FromRoute] Guid? subscriptionId)
+        {
+            return Ok(new { deleted = true });
         }
     }
 }

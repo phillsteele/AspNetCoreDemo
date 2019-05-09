@@ -1,12 +1,20 @@
 ﻿using Microsoft.AspNetCore.Authorization;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace AspNetCoreDemo.Security
 {
     public class HasClaimRequirement : IAuthorizationRequirement
     {
+        public HasClaimRequirement(string claim, string value)
+        {
+            Claim = claim;
+            Value = value;
+        }
+
+        public HasClaimRequirement(string claim) : this (claim, "")
+        {
+        }
+
+        public string Claim { get; }
+        public string Value { get; }
     }
 }
