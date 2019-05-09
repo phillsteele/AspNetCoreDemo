@@ -1,4 +1,9 @@
-﻿using AspNetCoreDemo.Pipeline;
+﻿using AspNetCoreDemo.Authorization;
+using AspNetCoreDemo.Pipeline;
+using AspNetCoreDemo.Security;
+using AspNetCoreDemo.Users;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -24,7 +29,23 @@ namespace AspNetCoreDemo
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
+
+            services.AddAuthentication("BasicAuthentication")
+                .AddScheme<AuthenticationSchemeOptions, BasicAuthenticationHandler>("BasicAuthentication", null);
+
+            //services.AddAuthorization(options =>
+            //{
+            //    options.AddPolicy(
+            //        Policies.HasClaim,
+            //        policy => policy.Requirements.Add(new HasClaimRequirement(CustomClaimTypes.FulfilGet)));
+            //});
+
+            // Configure DI for the services
+            services.AddSingleton<IAuthorizationHandler, HasClaimHandler>();
+            services.AddSingleton<IAuthorizationPolicyProvider, HasClaimPolicyProvider>();
+            services.AddSingleton<IUserList, CustomUserList>();
+            services.AddSingleton<IUserService, SimpleUserService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -51,6 +72,7 @@ namespace AspNetCoreDemo
             //}
 
             app
+               .UseAuthentication()
                .UseHttpsRedirection()
                .UseMvc();
         }

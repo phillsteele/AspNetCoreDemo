@@ -2,7 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using AspNetCoreDemo.Authorization;
 using AspNetCoreDemo.Model.SlcsInbound.Fulfil;
+using AspNetCoreDemo.Security;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -41,10 +44,14 @@ namespace AspNetCoreDemo.Controllers
     //    ]
     //}
 
-    [Route("api/[controller]")]
+    
     public class SubscriptionsController : Controller
     {
-        public async Task<IActionResult> Fulfil([FromBody] Subscription subscription)
+        [HttpPost]
+        [Authorize]
+        [Route("api/[controller]")]
+        //[AllowAnonymous] -- This attribute allows us to poke a hole in the Authorization mechanism.  Useful if we need a publicly available endpoint.
+        public async Task<IActionResult> Post([FromBody] Subscription subscription)
         {
             if (!ModelState.IsValid)
             {
@@ -52,6 +59,32 @@ namespace AspNetCoreDemo.Controllers
             }
 
             return Ok();
+        }
+
+
+        //[Authorize("bob")]
+        // If there is no policy called "bob" defined then calling this method will result in an exception: "The AuthorizationPolicy named: 'bob' was not found."
+        // If the policy fails then the user is returned a 403 - Forbidden
+
+        //[Authorize(Policies.HasClaim)]
+        // Policies can be handled by a custom handler, i.e. HasClaimPolicyHandler
+
+        [HttpGet]
+        [HasClaimAuthorize(CustomClaimTypes.FulfilGet)]
+        [Route("api/[controller]/{subscriptionId}")]
+        // This will insist that the caller has the claim "Fulfil.Get"
+        public async Task<IActionResult> Get([FromRoute] Guid? subscriptionId)
+        {
+            return Ok(new { name = "123" });
+        }
+
+        [HttpDelete]
+        [HasClaimAuthorize]
+        [Route("api/[controller]/{subscriptionId}")]
+        // As no claim has been specified the default behaviour will apply which means that the user must be authenticated
+        public async Task<IActionResult> Delete([FromRoute] Guid? subscriptionId)
+        {
+            return Ok(new { deleted = true });
         }
     }
 }
